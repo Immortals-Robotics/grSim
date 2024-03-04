@@ -1,6 +1,8 @@
 name: Build
 on:
   push:
+    tags:
+      - 'v*'
     branches:
       - master
   pull_request:
@@ -72,3 +74,11 @@ jobs:
         with:
           configurePreset: "windows-release"
           buildPreset: "windows-release"
+      - name: Release
+        uses: softprops/action-gh-release@v0.1.15
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          draft: true
+          files: "out/windows-release/dist/*.zip"
+          fail_on_unmatched_files: true
+          generate_release_notes: true
