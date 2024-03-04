@@ -19,6 +19,8 @@ jobs:
       - uses: lukka/get-cmake@latest
       - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
         uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 215a2535590f1f63788ac9bd2ed58ad15e6afdff
       - name: Run CMake and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
@@ -37,6 +39,8 @@ jobs:
       - uses: lukka/get-cmake@latest
       - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
         uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 215a2535590f1f63788ac9bd2ed58ad15e6afdff
       - name: Run CMake and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
@@ -50,6 +54,8 @@ jobs:
       - uses: lukka/get-cmake@latest
       - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
         uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 215a2535590f1f63788ac9bd2ed58ad15e6afdff
       - name: Run CMake and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
