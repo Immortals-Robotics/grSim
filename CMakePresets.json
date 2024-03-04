@@ -24,6 +24,56 @@
 			}
 		},
 		{
+			"name": "linux-base",
+			"inherits": "base",
+			"hidden": true,
+			"generator": "Ninja",
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
+		},
+		{
+			"name": "macos-base",
+			"inherits": "base",
+			"hidden": true,
+			"generator": "Ninja",
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Darwin"
+			}
+		},
+		{
+			"name": "macos-debug",
+			"inherits": "macos-base",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "macos-release",
+			"inherits": "macos-base",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		},
+		{
+			"name": "linux-debug",
+			"inherits": "linux-base",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "linux-release",
+			"inherits": "linux-base",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		},
+		{
 			"name": "windows-vs-22",
 			"description": "Target Windows (64-bit) for Visual Studio 2022",
 			"inherits": "windows-base",
@@ -68,6 +118,22 @@
 		}
 	],
 	"buildPresets": [
+		{
+			"name": "linux-debug",
+			"configurePreset": "linux-debug"
+		},
+		{
+			"name": "linux-release",
+			"configurePreset": "linux-release"
+		},
+		{
+			"name": "macos-debug",
+			"configurePreset": "macos-debug"
+		},
+		{
+			"name": "macos-release",
+			"configurePreset": "macos-release"
+		},
 		{
 			"name": "windows-debug",
 			"configurePreset": "windows-debug"
