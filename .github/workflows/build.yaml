@@ -4,6 +4,8 @@ on:
     branches:
       - master
   pull_request:
+  workflow_dispatch:
+
 jobs:
   build-linux:
     runs-on: ${{ matrix.os }}
@@ -52,12 +54,5 @@ jobs:
         uses: lukka/run-cmake@v10
         with:
           # this preset is needed to actually install the vcpkg dependencies
-          configurePreset: "ninja-multi-vcpkg"
-          configPresetAdditionalArgs: "[-DVCPKG_TARGET_TRIPLET=x64-windows]"
-          buildPreset: "ninja-multi-vcpkg"
-          buildPresetAdditionalArgs: "['--config Release']"
-    env:
-      # [OPTIONAL] Define the vcpkg's triplet you want to enforce, otherwise the default one
-      # for the hosting system will be automatically choosen (x64 is the default on all
-      # platforms, e.g. `x64-osx`).
-      VCPKG_DEFAULT_TRIPLET: "x64-windows"
+          configurePreset: "windows-release"
+          buildPreset: "windows-release"
