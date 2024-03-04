@@ -162,9 +162,9 @@ set_source_files_properties(${CONFIG_FILES}  PROPERTIES MACOSX_PACKAGE_LOCATION 
 
 set(app ${CMAKE_PROJECT_NAME})
 add_executable(${app} ${srcs})
-install(TARGETS ${app} DESTINATION bin)
 target_link_libraries(${app} ${libs})
 
+install(TARGETS ${app} DESTINATION bin)
 if(APPLE AND CMAKE_MACOSX_BUNDLE)
   # use CMAKE_MACOSX_BUNDLE if you want to build a mac bundle
   set(MACOSX_BUNDLE_ICON_FILE "${PROJECT_SOURCE_DIR}/resources/icons/grsim.icns")
@@ -181,7 +181,7 @@ if(APPLE AND CMAKE_MACOSX_BUNDLE)
 elseif(WIN32 AND CMAKE_WIN32_EXECUTABLE)
   # use CMAKE_WIN32_EXECUTABLE if you want to build a windows exe
   install(DIRECTORY config DESTINATION .)
-  install(DIRECTORY bin DESTINATION .
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/ DESTINATION bin
           FILES_MATCHING PATTERN "*.dll")
   set(CPACK_PACKAGE_EXECUTABLES ${app} ${app})
 else()
@@ -208,9 +208,9 @@ if(UNIX)
     endif()
 elseif(WIN32)
     set(ARCH "win32")
-    set(CPACK_GENERATOR ZIP NSIS)
+    set(CPACK_GENERATOR ZIP)
 endif()
-set(CPACK_OUTPUT_FILE_PREFIX ${PROJECT_SOURCE_DIR}/dist)
+set(CPACK_OUTPUT_FILE_PREFIX ${CMAKE_BINARY_DIR}/dist)
 set(CPACK_PACKAGE_CONTACT ${MAINTAINER})
 if(VENDOR)
     set(CPACK_PACKAGE_VENDOR ${VENDOR})
