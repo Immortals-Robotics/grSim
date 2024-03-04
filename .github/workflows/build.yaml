@@ -16,6 +16,10 @@ jobs:
         os: [ ubuntu-20.04, ubuntu-22.04 ]
     steps:
       - uses: actions/checkout@v4
+      - name: Install system packages
+        uses: ConorMacBride/install-package@v1
+        with:
+          apt: '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
       - uses: lukka/get-cmake@latest
       - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
         uses: lukka/run-vcpkg@v11
@@ -36,6 +40,10 @@ jobs:
         os: [ macos-12, macos-13 ]
     steps:
       - uses: actions/checkout@v4
+      - name: Install system packages
+        uses: ConorMacBride/install-package@v1
+        with:
+          brew: pkg-config
       - uses: lukka/get-cmake@latest
       - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
         uses: lukka/run-vcpkg@v11
