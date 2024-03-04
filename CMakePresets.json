@@ -11,7 +11,10 @@
 			"hidden": true,
 			"toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
 			"binaryDir": "${sourceDir}/out/build/${presetName}",
-			"installDir": "${sourceDir}/out/install/${presetName}"
+			"installDir": "${sourceDir}/out/install/${presetName}",
+			"cacheVariables": {
+				"CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/out/build/${presetName}/bin"
+			}
 		},
 		{
 			"name": "windows-base",
@@ -21,6 +24,9 @@
 				"type": "equals",
 				"lhs": "${hostSystemName}",
 				"rhs": "Windows"
+			},
+			"cacheVariables": {
+				"CMAKE_WIN32_EXECUTABLE": "ON"
 			}
 		},
 		{

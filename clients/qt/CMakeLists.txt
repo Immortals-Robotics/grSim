@@ -31,8 +31,6 @@ add_executable(${app} MACOSX_BUNDLE
     mainwindow.h
 )
 
-if(TARGET protobuf_external)
-    add_dependencies(${app} protobuf_external)
-endif()
-
 target_link_libraries(${app} ${libs})
+
+install(TARGETS ${app} DESTINATION bin)
