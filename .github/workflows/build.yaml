@@ -33,7 +33,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           draft: true
-          files: "out/build/windows-release/dist/*"
+          files: "out/build/linux-release/dist/*"
           fail_on_unmatched_files: true
           generate_release_notes: true
 
@@ -64,7 +64,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           draft: true
-          files: "out/build/windows-release/dist/*"
+          files: "out/build/macos-release/dist/*"
           fail_on_unmatched_files: true
           generate_release_notes: true
 
