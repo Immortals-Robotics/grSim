@@ -30,8 +30,9 @@ jobs:
       - name: Run CMake and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
-          configurePreset: "linux-debug"
-          buildPreset: "linux-debug"
+          configurePreset: "linux-release"
+          buildPreset: "linux-release"
+          packagePreset: "linux-release"
 
   build-macos:
     runs-on: ${{ matrix.os }}
@@ -57,8 +58,9 @@ jobs:
       - name: Run CMake and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
-          configurePreset: "macos-debug"
-          buildPreset: "macos-debug"
+          configurePreset: "macos-release"
+          buildPreset: "macos-release"
+          packagePreset: "macos-release"
 
   build-windows:
     runs-on: windows-latest

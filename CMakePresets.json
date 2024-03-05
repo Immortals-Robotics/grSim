@@ -151,6 +151,14 @@
 	],
 	"packagePresets": [
 		{
+			"name": "linux-release",
+			"configurePreset": "linux-release"
+		},
+		{
+			"name": "macos-release",
+			"configurePreset": "macos-release"
+		},
+		{
 			"name": "windows-release",
 			"configurePreset": "windows-release"
 		}
