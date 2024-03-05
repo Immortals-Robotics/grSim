@@ -80,6 +80,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           draft: true
-          files: "out/windows-release/dist/*.zip"
+          files: "out/build/windows-release/dist/*.zip"
           fail_on_unmatched_files: true
           generate_release_notes: true
