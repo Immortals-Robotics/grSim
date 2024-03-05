@@ -12,12 +12,6 @@ string(TOLOWER ${CMAKE_PROJECT_NAME} CMAKE_PROJECT_NAME_LOWER)
 set(CMAKE_AUTOMOC YES)
 set(CMAKE_INCLUDE_CURRENT_DIR YES)
 
-# policy regarding how to handle generated stuff, OLD behavior would ignore generated files
-# (which includes the generated protobuf cpp files)
-if (POLICY CMP0071)
-    cmake_policy(SET CMP0071 NEW)
-endif()
-
 # definitions for knowing the OS from the code
 if(MSVC)
     add_definitions(-DHAVE_MSVC)
