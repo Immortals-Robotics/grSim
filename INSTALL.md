@@ -46,6 +46,8 @@ The container can be run in two flavors:
 
 ## Building and installing from the source code
 
+TODO: Replace all these with a simplified vcpkg build.
+
 ### Installing Dependencies
 
 #### Arch Linux
