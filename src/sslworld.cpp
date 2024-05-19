@@ -1015,6 +1015,13 @@ SSL_WrapperPacket* SSLWorld::generatePacket(int cam_id) {
         field->set_goal_width(CONVUNIT(cfg->Goal_Width()));
         field->set_goal_depth(CONVUNIT(cfg->Goal_Depth()));
 
+        field->set_penalty_area_depth(CONVUNIT(cfg->Field_Penalty_Depth()));
+        field->set_penalty_area_width(CONVUNIT(cfg->Field_Penalty_Width()));
+        field->set_center_circle_radius(CONVUNIT(cfg->Field_Rad()));
+        field->set_line_thickness(CONVUNIT(cfg->Field_Line_Width()));
+        field->set_goal_center_to_penalty_mark(CONVUNIT(cfg->Field_Penalty_Point()));
+        field->set_ball_radius(CONVUNIT(cfg->BallRadius()));
+
         // Field lines and arcs
         addFieldLinesArcs(field);
 
