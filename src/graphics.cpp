@@ -446,13 +446,7 @@ void CGraphics::initScene(int width,int height,dReal rc,dReal gc,dReal bc,bool f
     _width = width;
     _height = height;
 
-    //glEnable(GL_POLYGON_SMOOTH);
-    //glEnable(GL_LINE_SMOOTH);
-    //glEnable(GL_POINT_SMOOTH);
-    //glHint(GL_POINT_SMOOTH_HINT,GL_NICEST);
-    //glHint(GL_POLYGON_SMOOTH_HINT,GL_NICEST);
-    //glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
-    //glEnable(GL_MULTISAMPLE);
+    glEnable(GL_MULTISAMPLE);
 
     // setup stuff
     glEnable (GL_LIGHTING);
@@ -462,7 +456,7 @@ void CGraphics::initScene(int width,int height,dReal rc,dReal gc,dReal bc,bool f
     glDisable (GL_TEXTURE_GEN_T);
     glShadeModel (GL_FLAT);
     glEnable (GL_DEPTH_TEST);
-    glDepthFunc (GL_LESS);
+    glDepthFunc (GL_LEQUAL);
     glEnable (GL_CULL_FACE);
     glCullFace (GL_BACK);
     glFrontFace (GL_CCW);
@@ -471,7 +465,7 @@ void CGraphics::initScene(int width,int height,dReal rc,dReal gc,dReal bc,bool f
     glViewport (0,0,width,height);
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity();
-    const dReal vnear = 0.1f;
+    const dReal vnear = 0.2f;
     const dReal vfar = m_renderDepth;
     const dReal k = 0.8f;     // view scale, 1 = +/- 45 degrees
     frustum_vnear = vnear;
@@ -546,35 +540,6 @@ void CGraphics::finalizeScene()
     //owner->swapBuffers();
 }
 
-void CGraphics::drawSky ()
-{
-    if (graphicDisabled) return;
-    const dReal ssize = 1000.0f;
-    dReal offset = 0.0f;
-
-    dReal x = ssize*sky_scale;
-    dReal z = view_xyz[2] + sky_height;
-
-    glBegin (GL_QUADS);
-    glNormal3f (0,0,-1);
-    glTexCoord2f (-x+offset,-x+offset);
-    glVertex3f (-ssize+view_xyz[0],-ssize+view_xyz[1],z);
-    glTexCoord2f (-x+offset,x+offset);
-    glVertex3f (-ssize+view_xyz[0],ssize+view_xyz[1],z);
-    glTexCoord2f (x+offset,x+offset);
-    glVertex3f (ssize+view_xyz[0],ssize+view_xyz[1],z);
-    glTexCoord2f (x+offset,-x+offset);
-    glVertex3f (ssize+view_xyz[0],-ssize+view_xyz[1],z);
-    glEnd();
-
-    //if (offset > 1) offset -= 1;//never read
-
-    glDepthFunc (GL_LESS);
-    glDepthRange (0,1);
-
-    resetState();
-}
-
 void CGraphics::resetState()
 {
     if (graphicDisabled) return;
@@ -582,7 +547,7 @@ void CGraphics::resetState()
     glDisable (GL_TEXTURE_2D);
     glShadeModel (GL_FLAT);
     glEnable (GL_DEPTH_TEST);
-    glDepthFunc (GL_LESS);
+    glDepthFunc (GL_LEQUAL);
     glColor3f (1,1,1);
     setColor (1,1,1,1);
 }
@@ -593,7 +558,7 @@ void CGraphics::drawGround()
     glDisable (GL_LIGHTING);
     glShadeModel (GL_FLAT);
     glEnable (GL_DEPTH_TEST);
-    glDepthFunc (GL_LESS);
+    glDepthFunc (GL_LEQUAL);
 
     const dReal gsize = 100.0f;
     const dReal offset = 0;
