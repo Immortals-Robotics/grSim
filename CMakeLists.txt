@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
-
+cmake_minimum_required(VERSION 3.25)
 
 ## Project branding, version and package mantainer
 project(grSim)
@@ -7,31 +6,11 @@ set(VERSION "1.0.0a2")
 #set(VENDOR "Parsian")
 set(MAINTAINER "Mani Monajjemi <mani.monajjemi@gmail.com>")
 
-
 # some utils and helper vars
 string(TOLOWER ${CMAKE_PROJECT_NAME} CMAKE_PROJECT_NAME_LOWER)
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
-include(${PROJECT_SOURCE_DIR}/cmake/Utils.cmake)
-standard_config()
-standard_paths(${PROJECT_SOURCE_DIR} bin lib)
 
-# policy regarding how to handle generated stuff, OLD behavior would ignore generated files
-# (which includes the generated protobuf cpp files)
-if (POLICY CMP0071)
-    cmake_policy(SET CMP0071 NEW)
-endif()
-
-# policy regarding when to rebuild stuff when external projects downloaded with URL changes
-if (POLICY CMP0135)
-    cmake_policy(SET CMP0135 NEW)
-endif()
-
-include(GNUInstallDirs)
-
-set(app ${CMAKE_PROJECT_NAME})
-# create the target before the sources list is known so that we can call
-# add_dependencies(<target> external_proj)
-add_executable(${app} "")
+set(CMAKE_AUTOMOC YES)
+set(CMAKE_INCLUDE_CURRENT_DIR YES)
 
 # definitions for knowing the OS from the code
 if(MSVC)
@@ -51,13 +30,13 @@ if(UNIX)
 endif()
 
 # set explicitly the c++ standard to use
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # add src dir to included directories
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/include/net)
 include_directories(${PROJECT_SOURCE_DIR}/include/physics)
-
 
 ## Handling depenendcies
 
@@ -66,90 +45,25 @@ set(libs)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIR})
-list(APPEND libs ${OPENGL_LIBRARIES})
+list(APPEND libs OpenGL::GL)
 #find_package(GLUT REQUIRED)
 #include_directories(${GLUT_INCLUDE_DIR})
 
 # Qt
-if(APPLE AND EXISTS /usr/local/opt/qt)
-  # Homebrew installs Qt5 (up to at least 5.9.1) in
-  # /usr/local/qt5, ensure it can be found by CMake since
-  # it is not in the default /usr/local prefix.
-  list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt")
-endif()
 find_package(Qt5 COMPONENTS Core Widgets OpenGL Network REQUIRED)
 list(APPEND libs Qt5::Core Qt5::Widgets Qt5::OpenGL Qt5::Network)
 
 # ODE
-if(BUILD_ODE)
-  include(BuildODE)
-  add_dependencies(${app} ode_external)
-else()
-  if(WIN32)
-    find_package(ODE CONFIG)
-    set(ODE_LIB_NAME ODE::ODE)
-  else()
-    find_package(ODE)
-    set(ODE_LIB_NAME ode::ode)
-  endif()
-
-  if(ODE_FOUND)
-    list(APPEND libs ${ODE_LIB_NAME})
-  else()
-    # if ODE could not be found just build it
-    include(BuildODE)
-    add_dependencies(${app} ode_external)
-  endif()
-endif()
+find_package(ode CONFIG REQUIRED)
+list(APPEND libs ODE::ODE)
 
 # VarTypes
-find_package(VarTypes)
-
-if(NOT VARTYPES_FOUND)
-  include(ExternalProject)
-  
-  set(VARTYPES_CMAKE_ARGS "-DVARTYPES_BUILD_STATIC=ON;-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>")
-  if(NOT "${CMAKE_TOOLCHAIN_FILE}" STREQUAL "")
-    set(VARTYPES_CMAKE_ARGS "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE};${VARTYPES_CMAKE_ARGS}")
-  endif()
-
-  ExternalProject_Add(vartypes_external
-    GIT_REPOSITORY    https://github.com/jpfeltracco/vartypes
-    GIT_TAG           origin/jpfeltracco/build_static
-    CMAKE_ARGS        "${VARTYPES_CMAKE_ARGS}"
-    STEP_TARGETS install
-  )
-  set(VARTYPES_LIB_SUBPATH "${CMAKE_INSTALL_LIBDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}vartypes${CMAKE_STATIC_LIBRARY_SUFFIX}")
-
-  # the byproducts are available after the install step
-  ExternalProject_Add_Step(vartypes_external out
-    DEPENDEES install
-    BYPRODUCTS
-        "<INSTALL_DIR>/${VARTYPES_LIB_SUBPATH}"
-  )
-
-  add_dependencies(${app} vartypes_external)
-
-  ExternalProject_Get_Property(vartypes_external install_dir)
-  add_dependencies(${app} vartypes_external)
-
-  set(VARTYPES_INCLUDE_DIRS "${install_dir}/include")
-  set(VARTYPES_LIBRARIES "${install_dir}/${VARTYPES_LIB_SUBPATH}")
-endif()
-
-target_include_directories(${app} PRIVATE ${VARTYPES_INCLUDE_DIRS})
-list(APPEND libs ${VARTYPES_LIBRARIES})
+find_package(vartypes CONFIG REQUIRED)
+list(APPEND libs vartypes::vartypes)
 
 # Protobuf
-include(FindOrBuildProtobuf)
-
-if(TARGET protobuf_external)
-    add_dependencies(${app} protobuf_external)
-endif()
-
-include_directories(${Protobuf_INCLUDE_DIRS})
-list(APPEND libs ${Protobuf_LIBRARIES})
+find_package(protobuf CONFIG REQUIRED)
+list(APPEND libs protobuf::libprotobuf)
 
 set (Protobuf_IMPORT_DIRS ${Protobuf_INCLUDE_DIR})
 protobuf_generate_cpp(PROTO_CPP PROTO_H
@@ -240,10 +154,11 @@ set(srcs
 file(GLOB CONFIG_FILES "config/*.ini")
 set_source_files_properties(${CONFIG_FILES}  PROPERTIES MACOSX_PACKAGE_LOCATION "config")
 
-target_sources(${app} PRIVATE ${srcs})
-install(TARGETS ${app} DESTINATION bin)
+set(app ${CMAKE_PROJECT_NAME})
+add_executable(${app} ${srcs})
 target_link_libraries(${app} ${libs})
 
+install(TARGETS ${app} DESTINATION bin)
 if(APPLE AND CMAKE_MACOSX_BUNDLE)
   # use CMAKE_MACOSX_BUNDLE if you want to build a mac bundle
   set(MACOSX_BUNDLE_ICON_FILE "${PROJECT_SOURCE_DIR}/resources/icons/grsim.icns")
@@ -260,7 +175,7 @@ if(APPLE AND CMAKE_MACOSX_BUNDLE)
 elseif(WIN32 AND CMAKE_WIN32_EXECUTABLE)
   # use CMAKE_WIN32_EXECUTABLE if you want to build a windows exe
   install(DIRECTORY config DESTINATION .)
-  install(DIRECTORY bin DESTINATION .
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/ DESTINATION bin
           FILES_MATCHING PATTERN "*.dll")
   set(CPACK_PACKAGE_EXECUTABLES ${app} ${app})
 else()
@@ -287,9 +202,9 @@ if(UNIX)
     endif()
 elseif(WIN32)
     set(ARCH "win32")
-    set(CPACK_GENERATOR ZIP NSIS)
+    set(CPACK_GENERATOR ZIP)
 endif()
-set(CPACK_OUTPUT_FILE_PREFIX ${PROJECT_SOURCE_DIR}/dist)
+set(CPACK_OUTPUT_FILE_PREFIX ${CMAKE_BINARY_DIR}/dist)
 set(CPACK_PACKAGE_CONTACT ${MAINTAINER})
 if(VENDOR)
     set(CPACK_PACKAGE_VENDOR ${VENDOR})

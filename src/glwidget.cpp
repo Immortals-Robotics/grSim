@@ -30,6 +30,10 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 GLWidget::GLWidget(QWidget *parent, ConfigWidget* _cfg)
     : QGLWidget(parent)
 {
+    QGLFormat format{};
+    format.setSamples(4); // 4x MSAA
+    setFormat(format);
+
     frames = 0;
     state = CursorMode::STEADY;
     first_time = true;
