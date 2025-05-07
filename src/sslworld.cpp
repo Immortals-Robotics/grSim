@@ -461,7 +461,9 @@ void SSLWorld::step(dReal dt) {
         p->step(dt/ballCollisionTry);
     }
 
-    sim_time += last_dt;
+    const auto now = std::chrono::system_clock::now();
+    sim_time = std::chrono::duration_cast<std::chrono::duration<double>>(now.time_since_epoch()).count();
+    //sim_time += last_dt;
 
     int best_k=-1;
     dReal best_dist = 1e8;
@@ -1006,7 +1008,11 @@ SSL_WrapperPacket* SSLWorld::generatePacket(int cam_id) {
     pPacket->mutable_detection()->set_camera_id(cam_id);
     pPacket->mutable_detection()->set_frame_number(frame_num);
     pPacket->mutable_detection()->set_t_capture(sim_time);
-    pPacket->mutable_detection()->set_t_sent(sim_time);
+
+    const auto now = std::chrono::system_clock::now();
+    const double t_sent = std::chrono::duration_cast<std::chrono::duration<double>>(now.time_since_epoch()).count();
+    pPacket->mutable_detection()->set_t_sent(t_sent);
+
     dReal dev_x = cfg->noiseDeviation_x();
     dReal dev_y = cfg->noiseDeviation_y();
     dReal dev_a = cfg->noiseDeviation_angle();
