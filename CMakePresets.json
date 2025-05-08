@@ -126,6 +126,10 @@
 	],
 	"buildPresets": [
 		{
+			"name": "windows-vs-22",
+			"configurePreset": "windows-vs-22"
+		},
+		{
 			"name": "linux-debug",
 			"configurePreset": "linux-debug"
 		},

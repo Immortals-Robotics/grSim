@@ -3,7 +3,7 @@
     "qt5-base",
     "ode",
     "protobuf",
-	"opengl",
-	"vartypes"
+    "opengl",
+    "vartypes"
   ]
 }
