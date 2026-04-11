@@ -8,6 +8,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-linux:
     runs-on: ubuntu-latest
@@ -20,8 +23,6 @@ jobs:
       - uses: lukka/get-cmake@latest
       - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
         uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgGitCommitId: ce613c41372b23b1f51333815feb3edd87ef8a8b
       - name: Run CMake and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
@@ -29,7 +30,7 @@ jobs:
           buildPreset: "linux-release"
           packagePreset: "linux-release"
       - name: Release
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           draft: true
@@ -51,8 +52,6 @@ jobs:
       - uses: lukka/get-cmake@latest
       - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
         uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgGitCommitId: ce613c41372b23b1f51333815feb3edd87ef8a8b
       - name: Run CMake and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
@@ -60,7 +59,7 @@ jobs:
           buildPreset: "macos-release"
           packagePreset: "macos-release"
       - name: Release
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           draft: true
@@ -75,8 +74,6 @@ jobs:
       - uses: lukka/get-cmake@latest
       - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
         uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgGitCommitId: ce613c41372b23b1f51333815feb3edd87ef8a8b
       - name: Run CMake and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
@@ -84,7 +81,7 @@ jobs:
           buildPreset: "windows-release"
           packagePreset: "windows-release"
       - name: Release
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           draft: true
