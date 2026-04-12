@@ -5,7 +5,6 @@ on:
       - 'v*'
     branches:
       - master
-      - vcpkg-build
   pull_request:
   workflow_dispatch:
 

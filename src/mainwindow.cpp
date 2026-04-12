@@ -560,7 +560,7 @@ void MainWindow::takeSnapshotToClipboard()
 
 void MainWindow::showAbout()
 {
-    QString title = QString("grSim v0.9 - Build r1240");
+    QString title = QString("grSim v" GRSIM_VERSION);
     QString text = QString("grSim - RoboCup Small Size Soccer Robots Simulator\n\n(C) 2011 - Parsian Robotic Center\nhttp://eew.aut.ac.ir/~parsian/grsim\n\ngrSim is free software released under the terms of GNU GPL v3");
     QMessageBox::about(this, title, text);
 }
